@@ -1,7 +1,6 @@
 # GTK for windows environments
 
-This project aims to produce consistent and complete gtk environment for windows targets (mingw).
-
+This project aims to produce consistent, complete and portable gtk environment for windows targets (mingw).
 
 # Build process
 
