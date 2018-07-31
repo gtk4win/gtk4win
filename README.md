@@ -40,6 +40,12 @@ newer debian:
 # apt-get install wine wine-binfmt mingw-w64-i686-dev
 ```
 
+## harfbuzz prereqs
+
+```
+# apt-get install g++-mingw-w64-i686
+```
+
 GDK-pixbuf needs to run some win32 programs during build. These can be executed by wine, but if you are building 32bit version, it needs wine32:
 
 ```

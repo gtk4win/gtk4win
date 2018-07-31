@@ -61,11 +61,11 @@ status/libpng: checkdirs status/zlib
 .PHONY: pixman
 pixman: status/pixman
 
-status/pixman: checkdirs
+status/pixman: checkdirs status/libpng
 	echo "Build pixman"
 	if [ ! -e src/pixman-0.34.0.tar.gz ]; then cd src; wget http://uprojects.org/archive/gtk4win/pixman-0.34.0.tar.gz ; fi
 	if [ ! -e build/pixman-0.34.0 ]; then cd build; tar xf ../src/pixman-0.34.0.tar.gz; fi
-	cd build/pixman-0.34.0; ./configure --host=i686-w64-mingw32 --prefix=$(HERE)/usr/ --exec-prefix=$(HERE)/usr/ LDFLAGS="-L$(HERE)/usr/lib" CFLAGS="-I$(HERE)/usr/include" CPPFLAGS="-I$(HERE)/usr/include"
+	cd build/pixman-0.34.0; ./configure --host=i686-w64-mingw32 --prefix=$(HERE)/usr/ --exec-prefix=$(HERE)/usr/ LDFLAGS="-L$(HERE)/usr/lib" CFLAGS="-I$(HERE)/usr/include" CPPFLAGS="-I$(HERE)/usr/include" PKG_CONFIG_PATH=$(HERE)/usr/lib/pkgconfig PKG_CONFIG_LIBDIR=$(HERE)/usr/ --enable-libpng
 	cd build/pixman-0.34.0; make -j$(NPROC)
 	cd build/pixman-0.34.0; make install
 	touch status/pixman
@@ -73,7 +73,7 @@ status/pixman: checkdirs
 .PHONY: freetype
 freetype: status/freetype
 
-status/freetype: checkdirs
+status/freetype: checkdirs status/zlib status/harfbuzz
 	echo "Build freetype"
 	if [ ! -e src/freetype-2.9.1.tar.bz2 ]; then cd src; wget http://uprojects.org/archive/gtk4win/freetype-2.9.1.tar.bz2 ; fi
 	if [ ! -e build/freetype-2.9.1 ]; then cd build; tar xf ../src/freetype-2.9.1.tar.bz2; fi
@@ -185,7 +185,7 @@ status/fontconfig: checkdirs
 .PHONY: cairo
 cairo: status/cairo
 
-status/cairo: checkdirs
+status/cairo: checkdirs status/pixman status/freetype
 	echo "Build cairo"
 	if [ ! -e src/cairo-1.15.12.tar.xz ]; then cd src; wget http://uprojects.org/archive/gtk4win/cairo-1.15.12.tar.xz ; fi
 	if [ ! -e build/cairo-1.15.12 ]; then cd build; tar xf ../src/cairo-1.15.12.tar.xz; fi
@@ -209,7 +209,7 @@ status/fribidi: checkdirs
 .PHONY: harfbuzz
 harfbuzz: status/harfbuzz
 
-status/harfbuzz: checkdirs
+status/harfbuzz: checkdirs status/glib status/cairo status/fontconfig status/freetype
 	echo "Build harfbuzz"
 	if [ ! -e src/harfbuzz-1.8.1.tar.bz2 ]; then cd src; wget http://uprojects.org/archive/gtk4win/harfbuzz-1.8.1.tar.bz2 ; fi
 	if [ ! -e build/harfbuzz-1.8.1 ]; then cd build; tar xf ../src/harfbuzz-1.8.1.tar.bz2; fi
