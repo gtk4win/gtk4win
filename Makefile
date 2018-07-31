@@ -3,7 +3,12 @@ NPROC=$(shell nproc)
 
 #prereqs: wine mingw-w64 wine-binfmt
 
-all: checkdirs zlib libpng pixman freetype libiconv libxml2 gettext libffi glib atk gdk-pixbuf fontconfig cairo fribidi harfbuzz pango libepoxy gtk
+.PHONY: all
+all: pure-gtk
+
+.PHONY: pure-gtk
+pure-gtk:
+	checkdirs zlib libpng pixman freetype libiconv libxml2 gettext libffi glib atk gdk-pixbuf fontconfig cairo fribidi harfbuzz pango libepoxy gtk
 
 .PHONY: checkdirs
 checkdirs:
@@ -86,14 +91,6 @@ libffi:
 	cd build/libffi-3.2.1; make -j$(NPROC)
 	cd build/libffi-3.2.1; make install
 
-# .PHONY: pcre
-# pcre:
-# 	echo "Build pcre"
-# 	if [ ! -e build/pcre-8.42 ]; then cd build; tar xf ../src/pcre-8.42.tar.bz2; fi
-# 	cd build/pcre-8.42; ./configure --host=i686-w64-mingw32 --prefix=$(HERE)/usr/ --exec-prefix=$(HERE)/usr/ LDFLAGS="-L$(HERE)/usr/lib" CFLAGS="-I$(HERE)/usr/include" CPPFLAGS="-I$(HERE)/usr/include" PKG_CONFIG_PATH=$(HERE)/usr/lib/pkgconfig PKG_CONFIG_LIBDIR=$(HERE)/usr/ --enable-utf --enable-unicode-properties
-# 	cd build/pcre-8.42; make -j$(NPROC)
-# 	cd build/pcre-8.42; make install
-
 .PHONY: glib
 glib:
 	echo "Build glib"
@@ -175,6 +172,35 @@ gtk:
 	cd build/gtk+-3.22.30; WINEPATH="%WINEPATH;$(HERE)/usr/bin" ./configure --host=i686-w64-mingw32 --prefix=$(HERE)/usr/ --exec-prefix=$(HERE)/usr/ LDFLAGS="-L$(HERE)/usr/lib" CFLAGS="-I$(HERE)/usr/include" CPPFLAGS="-I$(HERE)/usr/include" PKG_CONFIG_PATH=$(HERE)/usr/lib/pkgconfig PKG_CONFIG_LIBDIR=$(HERE)/usr/ --disable-installed-tests
 	cd build/gtk+-3.22.30; WINEPATH="%WINEPATH;$(HERE)/usr/bin" make -j$(NPROC)
 	cd build/gtk+-3.22.30; WINEPATH="%WINEPATH;$(HERE)/usr/bin" make install
+
+.PHONY: vte
+vte:
+	echo "Build vte"
+	if [ ! -e build/vte-0.52.2 ]; then cd build; tar xvf ../src/vte-0.52.2.tar.xz; fi
+	cd build/vte-0.52.2; WINEPATH="%WINEPATH;$(HERE)/usr/bin" ./configure --host=i686-w64-mingw32 --prefix=$(HERE)/usr/ --exec-prefix=$(HERE)/usr/ LDFLAGS="-L$(HERE)/usr/lib" CFLAGS="-I$(HERE)/usr/include" CPPFLAGS="-I$(HERE)/usr/include" PKG_CONFIG_PATH=$(HERE)/usr/lib/pkgconfig PKG_CONFIG_LIBDIR=$(HERE)/usr/ --disable-installed-tests --without-gnutls --disable-introspection --disable-vala
+	cd build/vte-0.52.2; WINEPATH="%WINEPATH;$(HERE)/usr/bin" make -j$(NPROC)
+	cd build/vte-0.52.2; WINEPATH="%WINEPATH;$(HERE)/usr/bin" make install
+
+.PHONY: pcre
+pcre:
+	echo "Build pcre"
+	if [ ! -e build/pcre-8.42 ]; then cd build; tar xf ../src/pcre-8.42.tar.bz2; fi
+	cd build/pcre-8.42; ./configure --host=i686-w64-mingw32 --prefix=$(HERE)/usr/ --exec-prefix=$(HERE)/usr/ LDFLAGS="-L$(HERE)/usr/lib" CFLAGS="-I$(HERE)/usr/include" CPPFLAGS="-I$(HERE)/usr/include" PKG_CONFIG_PATH=$(HERE)/usr/lib/pkgconfig PKG_CONFIG_LIBDIR=$(HERE)/usr/ --enable-utf --enable-unicode-properties
+	cd build/pcre-8.42; make -j$(NPROC)
+	cd build/pcre-8.42; make install
+
+.PHONY: pcre2
+pcre2:
+	echo "Build pcre2"
+	if [ ! -e build/pcre2-10.31 ]; then cd build; tar xf ../src/pcre2-10.31.tar.bz2; fi
+	cd build/pcre2-10.31; ./configure --host=i686-w64-mingw32 --prefix=$(HERE)/usr/ --exec-prefix=$(HERE)/usr/ LDFLAGS="-L$(HERE)/usr/lib" CFLAGS="-I$(HERE)/usr/include" CPPFLAGS="-I$(HERE)/usr/include" PKG_CONFIG_PATH=$(HERE)/usr/lib/pkgconfig PKG_CONFIG_LIBDIR=$(HERE)/usr/ --enable-utf --enable-unicode-properties
+	cd build/pcre2-10.31; make -j$(NPROC)
+	cd build/pcre2-10.31; make install
+
+.PHONY: gnulib
+gnulib:
+	echo "Build gnulib"
+	if [ ! -e build/gnulib ]; then cd build; cp -pr ../src/gnulib ./ ; fi
 
 .PHONY: dist-clean
 dist-clean:
