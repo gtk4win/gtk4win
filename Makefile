@@ -73,7 +73,7 @@ status/pixman: checkdirs status/libpng
 .PHONY: freetype
 freetype: status/freetype
 
-status/freetype: checkdirs status/zlib status/harfbuzz
+status/freetype: checkdirs status/zlib
 	echo "Build freetype"
 	if [ ! -e src/freetype-2.9.1.tar.bz2 ]; then cd src; wget http://uprojects.org/archive/gtk4win/freetype-2.9.1.tar.bz2 ; fi
 	if [ ! -e build/freetype-2.9.1 ]; then cd build; tar xf ../src/freetype-2.9.1.tar.bz2; fi
@@ -173,11 +173,11 @@ status/gdk-pixbuf: checkdirs status/libpng status/glib status/gettext status/lib
 .PHONY: fontconfig
 fontconfig: status/fontconfig
 
-status/fontconfig: checkdirs
+status/fontconfig: checkdirs status/libiconv
 	echo "Build fontconfig"
 	if [ ! -e src/fontconfig-2.13.0.tar.gz ]; then cd src; wget http://uprojects.org/archive/gtk4win/fontconfig-2.13.0.tar.gz ; fi
 	if [ ! -e build/fontconfig-2.13.0 ]; then cd build; tar xf ../src/fontconfig-2.13.0.tar.gz; fi
-	cd build/fontconfig-2.13.0; ./configure --host=i686-w64-mingw32 --prefix=$(HERE)/usr/ --exec-prefix=$(HERE)/usr/ LDFLAGS="-L$(HERE)/usr/bin -liconv-2 -lintl-8" CFLAGS="-I$(HERE)/usr/include" CPPFLAGS="-I$(HERE)/usr/include" PKG_CONFIG_PATH=$(HERE)/usr/lib/pkgconfig PKG_CONFIG_LIBDIR=$(HERE)/usr/ --enable-libxml2
+	cd build/fontconfig-2.13.0; WINEPATH="%WINEPATH;$(HERE)/usr/bin/" ./configure --host=i686-w64-mingw32 --prefix=$(HERE)/usr/ --exec-prefix=$(HERE)/usr/ LDFLAGS="-L$(HERE)/usr/bin -liconv-2 -lintl-8" CFLAGS="-I$(HERE)/usr/include" CPPFLAGS="-I$(HERE)/usr/include" PKG_CONFIG_PATH=$(HERE)/usr/lib/pkgconfig PKG_CONFIG_LIBDIR=$(HERE)/usr/ --enable-libxml2
 	cd build/fontconfig-2.13.0; make -j$(NPROC)
 	cd build/fontconfig-2.13.0; make install
 	touch status/fontconfig
@@ -185,7 +185,7 @@ status/fontconfig: checkdirs
 .PHONY: cairo
 cairo: status/cairo
 
-status/cairo: checkdirs status/pixman status/freetype
+status/cairo: checkdirs status/pixman status/freetype status/glib
 	echo "Build cairo"
 	if [ ! -e src/cairo-1.15.12.tar.xz ]; then cd src; wget http://uprojects.org/archive/gtk4win/cairo-1.15.12.tar.xz ; fi
 	if [ ! -e build/cairo-1.15.12 ]; then cd build; tar xf ../src/cairo-1.15.12.tar.xz; fi

@@ -46,6 +46,12 @@ newer debian:
 # apt-get install g++-mingw-w64-i686
 ```
 
+## fontconfig prereqs
+
+```
+apt-get install gperf
+```
+
 GDK-pixbuf needs to run some win32 programs during build. These can be executed by wine, but if you are building 32bit version, it needs wine32:
 
 ```
