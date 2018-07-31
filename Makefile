@@ -23,7 +23,7 @@ checkdirs:
 		mkdir build ; \
 	fi ; \
 	if [ ! -e src ]; then \
-		mkdir build ; \
+		mkdir src ; \
 	fi ; \
 
 .PHONY: zlib
