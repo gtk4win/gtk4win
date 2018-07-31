@@ -11,13 +11,15 @@ pure-gtk: checkdirs gtk
 
 .PHONY: checkdirs
 checkdirs:
+	set -e ; \
 	if [ ! -e usr ]; then \
 		mkdir usr ; \
 		mkdir usr/include ; \
 		mkdir usr/lib ; \
 		mkdir usr/bin ; \
 		cp /usr/i686-w64-mingw32/lib/libwinpthread-1.dll ./usr/bin ; \
-		cp /usr/lib/gcc/i686-w64-mingw32/7.3-win32/libgcc_s_sjlj-1.dll ./usr/bin ; \
+		if [ -e /usr/lib/gcc/i686-w64-mingw32/7.3-win32/ ]; then cp /usr/lib/gcc/i686-w64-mingw32/7.3-win32/libgcc_s_sjlj-1.dll ./usr/bin ; fi ; \
+		if [ -e /usr/lib/gcc/i686-w64-mingw32/6.3-win32/ ]; then cp /usr/lib/gcc/i686-w64-mingw32/6.3-win32/libgcc_s_sjlj-1.dll ./usr/bin ; fi ; \
 	fi; \
 	if [ ! -e build ]; then \
 		mkdir build ; \
@@ -145,7 +147,7 @@ status/glib: checkdirs status/zlib status/libffi status/gettext
 .PHONY: atk
 atk: status/atk
 
-status/atk: checkdirs
+status/atk: checkdirs status/glib
 	echo "Build atk"
 	if [ ! -e src/atk-2.28.1.tar.xz ]; then cd src; wget http://uprojects.org/archive/gtk4win/atk-2.28.1.tar.xz ; fi
 	if [ ! -e build/atk-2.28.1 ]; then cd build; tar xf ../src/atk-2.28.1.tar.xz; fi
@@ -157,7 +159,7 @@ status/atk: checkdirs
 .PHONY: gdk-pixbuf
 gdk-pixbuf: status/gdk-pixbuf
 
-status/gdk-pixbuf: checkdirs
+status/gdk-pixbuf: checkdirs status/libpng status/glib status/gettext status/libiconv
 	echo "Build gdk-pixbuf"
 	if [ ! -e src/gdk-pixbuf-2.36.11.tar.xz ]; then cd src; wget http://uprojects.org/archive/gtk4win/gdk-pixbuf-2.36.11.tar.xz ; fi
 	if [ ! -e build/gdk-pixbuf-2.36.11 ]; then cd build; tar xf ../src/gdk-pixbuf-2.36.11.tar.xz; fi
@@ -165,6 +167,8 @@ status/gdk-pixbuf: checkdirs
 	cd build/gdk-pixbuf-2.36.11; WINEPATH="%WINEPATH;$(HERE)/usr/bin" make -j$(NPROC)
 	cd build/gdk-pixbuf-2.36.11; make install
 	touch status/gdk-pixbuf
+
+#WINEPATH="%WINEPATH;$(HERE)/usr/bin/" 
 
 .PHONY: fontconfig
 fontconfig: status/fontconfig
