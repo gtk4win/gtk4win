@@ -7,8 +7,7 @@ NPROC=$(shell nproc)
 all: pure-gtk
 
 .PHONY: pure-gtk
-pure-gtk:
-	checkdirs zlib libpng pixman freetype libiconv libxml2 gettext libffi glib atk gdk-pixbuf fontconfig cairo fribidi harfbuzz pango libepoxy gtk
+pure-gtk: checkdirs zlib libpng pixman freetype libiconv libxml2 gettext libffi glib atk gdk-pixbuf fontconfig cairo fribidi harfbuzz pango libepoxy gtk
 
 .PHONY: checkdirs
 checkdirs:
