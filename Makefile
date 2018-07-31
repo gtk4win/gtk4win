@@ -173,7 +173,7 @@ status/gdk-pixbuf: checkdirs status/libpng status/glib status/gettext status/lib
 .PHONY: fontconfig
 fontconfig: status/fontconfig
 
-status/fontconfig: checkdirs status/libiconv
+status/fontconfig: checkdirs status/libiconv status/gettext status/freetype status/libxml2
 	echo "Build fontconfig"
 	if [ ! -e src/fontconfig-2.13.0.tar.gz ]; then cd src; wget http://uprojects.org/archive/gtk4win/fontconfig-2.13.0.tar.gz ; fi
 	if [ ! -e build/fontconfig-2.13.0 ]; then cd build; tar xf ../src/fontconfig-2.13.0.tar.gz; fi
